@@ -38,10 +38,11 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-			<scope>runtime</scope>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.7.3</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.javamoney</groupId>
 			<artifactId>moneta</artifactId>
@@ -76,7 +77,12 @@
 			<artifactId>log4j-slf4j-impl</artifactId>
 			<version>2.22.1</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>2.2.224</version>
+			<scope>test</scope>
+		</dependency>
 
 	</dependencies>
 

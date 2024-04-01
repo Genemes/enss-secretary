@@ -6,13 +6,12 @@ import com.siloe.enss.domain.bussiness.person.State;
 import jakarta.persistence.*;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity(name = "address")
 public class AddressPresentation {
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String street;
     private Integer number;
     private String neighborhood;
@@ -21,7 +20,7 @@ public class AddressPresentation {
     private State state;
 
     public AddressPresentation(){}
-    private AddressPresentation(UUID id, String street, Integer number, String neighborhood, String city, State state) {
+    private AddressPresentation(Long id, String street, Integer number, String neighborhood, String city, State state) {
         this.id = id;
         this.street = street;
         this.number = number;
@@ -30,7 +29,7 @@ public class AddressPresentation {
         this.state = state;
     }
 
-    public static AddressPresentation of(UUID id, String street, Integer number, String neighborhood, String city, State state){
+    public static AddressPresentation of(Long id, String street, Integer number, String neighborhood, String city, State state){
         Objects.requireNonNull(id, "id must not be null");
         Objects.requireNonNull(street, "street must not be null");
         Objects.requireNonNull(neighborhood, "neighborhood must not be null");

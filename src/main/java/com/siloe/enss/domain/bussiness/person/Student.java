@@ -2,18 +2,17 @@ package com.siloe.enss.domain.bussiness.person;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Student {
 
-    private UUID id;
+    private Long id;
     private String name;
     private String registration;
     private String cpf;
     private String birthCertificate;
     private String serie;
     private LocalDate birth;
-    private UUID responsibleId;
+    private Long responsibleId;
 
     private Student(Builder builder) {
         id = builder.id;
@@ -27,16 +26,16 @@ public class Student {
     }
 
     public static class Builder {
-        private UUID id = UUID.randomUUID();
+        private Long id = null;
         private String name = "";
         private String registration = "";
         private String cpf = "";
         private String birthCertificate = "";
         private String serie = "";
         private LocalDate birth = LocalDate.now();
-        private UUID responsibleId = null;
+        private Long responsibleId = null;
 
-        public Builder id(UUID value) {
+        public Builder id(Long value) {
             Objects.requireNonNull(value, "Id must not be null");
             id = value;
             return this;
@@ -78,7 +77,7 @@ public class Student {
             return this;
         }
 
-        public Builder responsible(UUID value) {
+        public Builder responsible(Long value) {
             Objects.requireNonNull(value, "Responsible must not be null");
             responsibleId = value;
             return this;
@@ -91,11 +90,11 @@ public class Student {
 
 
     // Getters and Setters
-    public UUID getResponsibleId() {
+    public Long getResponsibleId() {
         return this.responsibleId;
     }
 
-    public void setResponsibleId(UUID responsible) {
+    public void setResponsibleId(Long responsible) {
         this.responsibleId = responsible;
     }
 
@@ -147,11 +146,11 @@ public class Student {
         this.birth = birth;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

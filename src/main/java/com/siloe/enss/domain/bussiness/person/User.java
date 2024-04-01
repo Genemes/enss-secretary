@@ -5,11 +5,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.UUID;
 
 public class User implements UserDetails {
 
-    private UUID id;
+    private Long id;
     private String username;
     private String password;
     private Set<GrantedAuthority> authorities;
