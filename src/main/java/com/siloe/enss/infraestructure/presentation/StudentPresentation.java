@@ -1,29 +1,30 @@
 package com.siloe.enss.infraestructure.presentation;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity(name = "student")
 public class StudentPresentation {
 
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String registration;
     private String cpf;
     private String birthCertificate;
     private String serie;
     private LocalDate birth;
-    private UUID responsibleId;
+    private Long responsibleId;
 
     public StudentPresentation(){}
     private StudentPresentation(Builder builder) {
-        id = builder.id;
         name = builder.name;
         registration = builder.registration;
         cpf = builder.cpf;
@@ -34,17 +35,17 @@ public class StudentPresentation {
     }
 
     public static class Builder {
-        private UUID id = UUID.randomUUID();
+        private Long id = null;
         private String name = "";
         private String registration = "";
         private String cpf = "";
         private String birthCertificate = "";
         private String serie = "";
         private LocalDate birth = LocalDate.now();
-        private UUID responsibleId = null;
+        private Long responsibleId = null;
 
-        public StudentPresentation.Builder id(UUID value) {
-            Objects.requireNonNull(value, "Id must not be null");
+        public StudentPresentation.Builder id(Long value) {
+            Objects.requireNonNull(value, "id must not be null");
             id = value;
             return this;
         }
@@ -85,7 +86,7 @@ public class StudentPresentation {
             return this;
         }
 
-        public StudentPresentation.Builder responsibleId(UUID value) {
+        public StudentPresentation.Builder responsibleId(Long value) {
             Objects.requireNonNull(value, "Responsible must not be null");
             responsibleId = value;
             return this;
@@ -96,11 +97,11 @@ public class StudentPresentation {
         }
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -159,11 +160,11 @@ public class StudentPresentation {
     }
 
     @NonNull
-    public UUID getResponsible() {
+    public Long getResponsible() {
         return responsibleId;
     }
 
-    public void setResponsible(@NonNull UUID responsible) {
+    public void setResponsible(@NonNull Long responsible) {
         this.responsibleId = responsible;
     }
 

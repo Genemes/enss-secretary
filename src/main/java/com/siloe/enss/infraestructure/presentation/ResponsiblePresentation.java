@@ -1,10 +1,7 @@
 package com.siloe.enss.infraestructure.presentation;
 
 import com.siloe.enss.domain.bussiness.person.Email;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -13,7 +10,8 @@ import java.util.*;
 public class ResponsiblePresentation {
 
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String cpf;
     private String rg;
@@ -93,11 +91,11 @@ public class ResponsiblePresentation {
         }
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
