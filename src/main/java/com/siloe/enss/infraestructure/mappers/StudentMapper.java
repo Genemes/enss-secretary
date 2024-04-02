@@ -27,7 +27,7 @@ public class StudentMapper {
     }
 
     public StudentPresentation mapToPresentation(Student student) {
-        StudentPresentation presentation = new StudentPresentation.Builder()
+        return new StudentPresentation.Builder()
                 .id(student.getId())
                 .name(student.getName())
                 .registration(student.getRegistration())
@@ -37,7 +37,6 @@ public class StudentMapper {
                 .birth(student.getBirth())
                 .responsibleId(student.getResponsibleId())
                 .build();
-        return null;
     }
 
 }

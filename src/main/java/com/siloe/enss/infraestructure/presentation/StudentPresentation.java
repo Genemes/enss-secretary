@@ -25,6 +25,7 @@ public class StudentPresentation {
 
     public StudentPresentation(){}
     private StudentPresentation(Builder builder) {
+        id = builder.id;
         name = builder.name;
         registration = builder.registration;
         cpf = builder.cpf;
