@@ -17,8 +17,13 @@ public class EmailPresentation {
         this.value = value;
     }
 
-    public static EmailPresentation of(String email){
-        return EmailMapper.map(Email.of(email));
+    public static EmailPresentation of(String value){
+        Email email = Email.of(value);
+        return new EmailPresentation(email.toString());
     }
 
+    @Override
+    public String toString() {
+        return value;
+    }
 }
