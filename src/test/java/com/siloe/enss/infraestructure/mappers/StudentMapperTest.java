@@ -6,7 +6,6 @@ import com.siloe.enss.domain.dto.StudentDTO;
 import com.siloe.enss.infraestructure.presentation.StudentPresentation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.AssertionErrors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
@@ -16,29 +15,28 @@ import java.util.Locale;
 
 public class StudentMapperTest {
 
+    private static final Locale LOCALE_PT_BR = new Locale("pt-BR");
+    private static final String CPF_PATTERN = "[0-9]{3}\\.[0-9]{3}\\.[0-9]{3}-[0-9]{2}";
+    private static final String RG_PATTERN = "[0-9]{2}\\.[0-9]{3}\\.[0-9]{3}-[0-9]{1}";
+
     private StudentMapper studentMapper;
+    private Faker faker;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         studentMapper = new StudentMapper();
+        faker = new Faker(LOCALE_PT_BR);
     }
 
-    @Test
-    public void testMapFromDTOToENtity() {
-        // Given
-        Faker faker = new Faker(new Locale("pt-BR"));
-
-        // Pattern: 3 digits + '.' + 3 digits + '.' + 3 digits + '-' + 2 digits
-        String cpf = faker.regexify("[0-9]{3}\\.[0-9]{3}\\.[0-9]{3}-[0-9]{2}");
-        // Pattern: 2 digits + '.' + 3 digits + '.' + 3 digits + '-' + 1 digit
-        String rg = faker.regexify("[0-9]{2}\\.[0-9]{3}\\.[0-9]{3}-[0-9]{1}");
+    private StudentDTO createFakeStudentDTO() {
+        String cpf = faker.regexify(CPF_PATTERN);
+        String rg = faker.regexify(RG_PATTERN);
         int bookNumber = faker.number().numberBetween(1, 1000);
         int pageNumber = faker.number().numberBetween(1, 500);
-
         Date fakeDate = faker.date().birthday();
         LocalDate birth = fakeDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        StudentDTO dto = new StudentDTO(
+        return new StudentDTO(
                 faker.number().randomNumber(),
                 faker.name().fullName(),
                 String.format("Livro %d, pagina %d", bookNumber, pageNumber),
@@ -47,8 +45,36 @@ public class StudentMapperTest {
                 faker.number().toString(),
                 birth,
                 faker.number().randomNumber());
+    }
+
+    private Student createFakeStudent() {
+        String cpf = faker.regexify(CPF_PATTERN);
+        String rg = faker.regexify(RG_PATTERN);
+        int bookNumber = faker.number().numberBetween(1, 1000);
+        int pageNumber = faker.number().numberBetween(1, 500);
+        Date fakeDate = faker.date().birthday();
+        LocalDate birth = fakeDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        return new Student.Builder()
+                .id(faker.number().randomNumber())
+                .name(faker.name().fullName())
+                .registration(String.format("Livro %d, pagina %d", bookNumber, pageNumber))
+                .cpf(cpf)
+                .birthCertificate(faker.number().toString())
+                .serie(faker.number().toString())
+                .birth(birth)
+                .responsible(faker.number().randomNumber())
+                .build();
+    }
+
+    @Test
+    public void testMapFromDTOToENtity() {
+        // Given
+        StudentDTO dto = createFakeStudentDTO();
+
         // When
         Student student = studentMapper.map(dto);
+
         // Then
         assertNotNull(student);
         assertEquals(dto.id(), student.getId());
@@ -73,7 +99,6 @@ public class StudentMapperTest {
         assertNotNull(dto);
         assertEquals(student.getId(), dto.id());
         assertEquals(student.getName(), dto.name());
-
         assertEquals(student.getRegistration(), dto.registration());
         assertEquals(student.getCpf(), dto.cpf());
         assertEquals(student.getBirthCertificate(), dto.birthCertificate());
@@ -85,28 +110,7 @@ public class StudentMapperTest {
     @Test
     public void testMapToPresentation() {
         // Given
-        Faker faker = new Faker(new Locale("pt-BR"));
-
-        // Pattern: 3 digits + '.' + 3 digits + '.' + 3 digits + '-' + 2 digits
-        String cpf = faker.regexify("[0-9]{3}\\.[0-9]{3}\\.[0-9]{3}-[0-9]{2}");
-        // Pattern: 2 digits + '.' + 3 digits + '.' + 3 digits + '-' + 1 digit
-        String rg = faker.regexify("[0-9]{2}\\.[0-9]{3}\\.[0-9]{3}-[0-9]{1}");
-        int bookNumber = faker.number().numberBetween(1, 1000);
-        int pageNumber = faker.number().numberBetween(1, 500);
-
-        Date fakeDate = faker.date().birthday();
-        LocalDate birth = fakeDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-        Student student = new Student.Builder()
-                    .id(faker.number().randomNumber())
-                    .name(faker.name().fullName())
-                    .registration(String.format("Livro %d, pagina %d", bookNumber, pageNumber))
-                    .cpf(cpf)
-                    .birthCertificate(faker.number().toString())
-                    .serie(faker.number().toString())
-                    .birth(birth)
-                    .responsible(faker.number().randomNumber())
-                    .build();
+        Student student = createFakeStudent();
 
         // When
         StudentPresentation presentation = studentMapper.mapToPresentation(student);
