@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class StudentDatabaseGateway implements StudentGateway {
 
@@ -33,5 +35,23 @@ public class StudentDatabaseGateway implements StudentGateway {
         repository.save(presentation);
 
         return student;
+    }
+
+    @Override
+    public boolean delete(Long id){
+        if (id == null){
+            throw new IllegalArgumentException("Id cannot be null!");
+        }
+
+        Optional<StudentPresentation> retreivedStudent = repository.findById(id);
+
+        if (retreivedStudent.isPresent()){
+            repository.delete(retreivedStudent.get());
+            logger.info("M=createStudent, message=StudentDatabaseGateway, student deleted successfully, student={}", retreivedStudent);
+            return true;
+        }
+
+        logger.info("M=createStudent, message=StudentDatabaseGateway, unable to delete student");
+        return false;
     }
 }
