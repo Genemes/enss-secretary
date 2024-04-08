@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.mockito.internal.matchers.Null;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -66,8 +67,9 @@ public class StudentDatabaseGatewayTest {
         Mockito.when(studentRepository.findById(student.getId())).thenReturn(null);
         Mockito.doNothing().when(studentRepository).delete(studentPresentation.get());
 
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            studentDatabaseGateway.delete(null);
+        NullPointerException exception = Assertions.assertThrows(NullPointerException.class, () -> {
+            boolean response = studentDatabaseGateway.delete(null);
+            Assertions.assertFalse(response);
         });
 
         Assertions.assertEquals(exception.getMessage(), "Id cannot be null!");
