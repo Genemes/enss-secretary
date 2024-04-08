@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 public class DeleteStudentUseCase {
 
-    private static final Logger logger = LoggerFactory.getLogger(StudentDatabaseGateway.class);
+    private static final Logger logger = LoggerFactory.getLogger(DeleteStudentUseCase.class);
 
     private final StudentMapper studentMapper;
 

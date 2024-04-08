@@ -15,7 +15,7 @@ import java.util.Objects;
 @Service
 public class CreateStudentUsecase {
 
-    private static final Logger logger = LoggerFactory.getLogger(StudentDatabaseGateway.class);
+    private static final Logger logger = LoggerFactory.getLogger(CreateStudentUsecase.class);
 
     private final StudentMapper mapper;
 
