@@ -2,8 +2,11 @@ package com.siloe.enss.entrypoint.rest;
 
 import com.siloe.enss.application.usecase.student.create.CreateStudentUsecase;
 import com.siloe.enss.application.usecase.student.delete.DeleteStudentUseCase;
+import com.siloe.enss.application.usecase.student.update.UpdateStudentUseCase;
+import com.siloe.enss.domain.bussiness.person.Student;
 import com.siloe.enss.domain.dto.StudentDTO;
 import com.siloe.enss.entrypoint.vo.StudentVO;
+import com.siloe.enss.infraestructure.presentation.StudentPresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,9 +26,13 @@ public class StudentController {
     private final CreateStudentUsecase createSudentUsecase;
     private final DeleteStudentUseCase deleteStudentUseCase;
 
-    public StudentController(CreateStudentUsecase createStudentUsecase, DeleteStudentUseCase deleteStudentUseCase){
+    private final UpdateStudentUseCase updateStudentUseCase;
+
+    public StudentController(CreateStudentUsecase createStudentUsecase, DeleteStudentUseCase deleteStudentUseCase,
+                             UpdateStudentUseCase updateStudentUseCase){
         this.createSudentUsecase = createStudentUsecase;
         this.deleteStudentUseCase = deleteStudentUseCase;
+        this.updateStudentUseCase = updateStudentUseCase;
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,6 +56,17 @@ public class StudentController {
         deleteStudentUseCase.delete(id);
 
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<StudentVO> update(@RequestBody StudentDTO studentDTO, @PathVariable Long id){
+        logger.info("M=update, message=Controller, request to update a Student");
+
+        StudentDTO updateResponse = updateStudentUseCase.update(studentDTO, id);
+        logger.info("M=update, message=Controller, student updated successfully, updatedStudent={}", updateResponse);
+
+        return ResponseEntity.status(HttpStatus.OK).body(StudentVO.with(updateResponse.name(), updateResponse.registration(), updateResponse.cpf(),
+                updateResponse.birthCertificate(), updateResponse.serie(), updateResponse.birth(), updateResponse.responsibleId()));
     }
 
 }

@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -50,5 +51,35 @@ public class StudentDatabaseGateway implements StudentGateway {
 
         logger.info("M=deleteStudent, message=StudentDatabaseGateway, unable to delete student");
         return false;
+    }
+
+    @Override
+    public Student update(Student student, Long id) {
+        Objects.requireNonNull(student, "Student cannot be null");
+        Objects.requireNonNull(id, "Id cannot be null");
+
+        Optional<StudentPresentation> optionalRetreivedStudent = repository.findById(id);
+
+        if (optionalRetreivedStudent.isPresent()){
+
+            StudentPresentation retreivedStudent = optionalRetreivedStudent.get();
+
+            StudentPresentation studentToUpdate = new StudentPresentation.Builder()
+                    .id(retreivedStudent.getId())
+                    .name(student.getName())
+                    .registration(student.getRegistration())
+                    .cpf(student.getCpf())
+                    .birthCertificate(student.getBirthCertificate())
+                    .serie(student.getSerie())
+                    .birth(student.getBirth())
+                    .responsibleId(student.getResponsibleId())
+                    .build();
+
+            StudentPresentation studentUpdated = repository.save(studentToUpdate);
+            logger.info("M=updateStudent, message=StudentDatabaseGateway, student updated successfully, student={}", studentUpdated);
+        }else{
+            logger.info("M=updateStudent, message=StudentDatabaseGateway, unable update student");
+        }
+        return student;
     }
 }

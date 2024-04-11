@@ -1,4 +1,4 @@
-package com.siloe.enss.infraestructure.database.student;
+package com.siloe.enss.infraestructure.database.student.delete;
 
 import com.siloe.enss.domain.bussiness.person.Student;
 import com.siloe.enss.infraestructure.database.StudentDatabaseGateway;
@@ -10,12 +10,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.mockito.internal.matchers.Null;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
-public class StudentDatabaseGatewayTest {
+public class DeleteStudentDatabaseGatewayTest {
 
     @Mock
     private StudentRepository studentRepository;
