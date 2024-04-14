@@ -1,9 +1,6 @@
 package com.siloe.enss.application.gateway;
 
 import com.siloe.enss.domain.bussiness.person.Student;
-import com.siloe.enss.infraestructure.presentation.StudentPresentation;
-
-import java.util.Optional;
 
 public interface StudentGateway {
 

@@ -1,14 +1,12 @@
 package com.siloe.enss.application.usecase.student.delete;
 
 import com.siloe.enss.application.gateway.StudentGateway;
-import com.siloe.enss.infraestructure.database.StudentDatabaseGateway;
 import com.siloe.enss.infraestructure.mappers.StudentMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class DeleteStudentUseCase {
@@ -24,7 +22,7 @@ public class DeleteStudentUseCase {
         this.gateway = studentGateway;
     }
 
-    public boolean delete(Long id){
+    public boolean execute(Long id){
         Objects.requireNonNull(id, "Id cannot be null!");
         return gateway.delete(id);
     }

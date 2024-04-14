@@ -77,9 +77,10 @@ public class StudentDatabaseGateway implements StudentGateway {
 
             StudentPresentation studentUpdated = repository.save(studentToUpdate);
             logger.info("M=updateStudent, message=StudentDatabaseGateway, student updated successfully, student={}", studentUpdated);
+            return student;
         }else{
             logger.info("M=updateStudent, message=StudentDatabaseGateway, unable update student");
+            return null;
         }
-        return student;
     }
 }
