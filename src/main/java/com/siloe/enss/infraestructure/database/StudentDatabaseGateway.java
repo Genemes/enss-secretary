@@ -26,7 +26,7 @@ public class StudentDatabaseGateway implements StudentGateway {
     }
     @Override
     public Student create(Student student) {
-        Objects.requireNonNull(student, "student cannot be null");
+        Objects.requireNonNull(student, "Student cannot be null");
 
         StudentPresentation presentation = mapper.mapToPresentation(student);
         logger.info("M=createStudent, message=StudentDatabaseGateway, student return successfully, student={}", presentation);
@@ -50,5 +50,36 @@ public class StudentDatabaseGateway implements StudentGateway {
 
         logger.info("M=deleteStudent, message=StudentDatabaseGateway, unable to delete student");
         return false;
+    }
+
+    @Override
+    public Student update(Student student, Long id) {
+        Objects.requireNonNull(student, "Student cannot be null");
+        Objects.requireNonNull(id, "Id cannot be null");
+
+        Optional<StudentPresentation> optionalRetreivedStudent = repository.findById(id);
+
+        if (optionalRetreivedStudent.isPresent()){
+
+            StudentPresentation retreivedStudent = optionalRetreivedStudent.get();
+
+            StudentPresentation studentToUpdate = new StudentPresentation.Builder()
+                    .id(retreivedStudent.getId())
+                    .name(student.getName())
+                    .registration(student.getRegistration())
+                    .cpf(student.getCpf())
+                    .birthCertificate(student.getBirthCertificate())
+                    .serie(student.getSerie())
+                    .birth(student.getBirth())
+                    .responsibleId(student.getResponsibleId())
+                    .build();
+
+            StudentPresentation studentUpdated = repository.save(studentToUpdate);
+            logger.info("M=updateStudent, message=StudentDatabaseGateway, student updated successfully, student={}", studentUpdated);
+            return student;
+        }else{
+            logger.info("M=updateStudent, message=StudentDatabaseGateway, unable update student");
+            return null;
+        }
     }
 }

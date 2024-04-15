@@ -1,7 +1,8 @@
 package com.siloe.enss.entrypoint.rest;
 
-import com.siloe.enss.application.usecase.student.create.CreateStudentUsecase;
+import com.siloe.enss.application.usecase.student.create.CreateStudentUseCase;
 import com.siloe.enss.application.usecase.student.delete.DeleteStudentUseCase;
+import com.siloe.enss.application.usecase.student.update.UpdateStudentUseCase;
 import com.siloe.enss.domain.dto.StudentDTO;
 import com.siloe.enss.entrypoint.vo.StudentVO;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/student")
@@ -20,12 +22,15 @@ public class StudentController {
 
     private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
-    private final CreateStudentUsecase createSudentUsecase;
+    private final CreateStudentUseCase createSudentUsecase;
     private final DeleteStudentUseCase deleteStudentUseCase;
+    private final UpdateStudentUseCase updateStudentUseCase;
 
-    public StudentController(CreateStudentUsecase createStudentUsecase, DeleteStudentUseCase deleteStudentUseCase){
+    public StudentController(CreateStudentUseCase createStudentUsecase, DeleteStudentUseCase deleteStudentUseCase,
+                             UpdateStudentUseCase updateStudentUseCase){
         this.createSudentUsecase = createStudentUsecase;
         this.deleteStudentUseCase = deleteStudentUseCase;
+        this.updateStudentUseCase = updateStudentUseCase;
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,13 +47,29 @@ public class StudentController {
                 createdStudent.birthCertificate(), createdStudent.serie(), createdStudent.birth(), createdStudent.responsibleId()));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> delete(@PathVariable Long id){
         logger.info("M=delete, message=Controller, request to delete a Student");
 
-        deleteStudentUseCase.delete(id);
+        deleteStudentUseCase.execute(id);
 
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<StudentVO> update(@RequestBody StudentDTO studentDTO, @PathVariable Long id){
+        logger.info("M=update, message=Controller, request to update a Student");
+
+        StudentDTO updateResponse = updateStudentUseCase.execute(studentDTO, id);
+
+        if (Objects.nonNull(updateResponse)){
+            logger.info("M=update, message=Controller, student updated successfully, updatedStudent={}", updateResponse);
+            return ResponseEntity.status(HttpStatus.OK).body(StudentVO.with(updateResponse.name(), updateResponse.registration(), updateResponse.cpf(),
+                    updateResponse.birthCertificate(), updateResponse.serie(), updateResponse.birth(), updateResponse.responsibleId()));
+        }
+
+        logger.info("M=update, message=Controller, unable update student");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
 }
