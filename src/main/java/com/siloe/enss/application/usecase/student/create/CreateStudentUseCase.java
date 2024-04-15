@@ -27,7 +27,7 @@ public class CreateStudentUseCase {
     }
 
     public StudentDTO execute(StudentDTO studentDTO) {
-        Objects.requireNonNull(studentDTO, "studentDTO cannot be null!");
+        Objects.requireNonNull(studentDTO, "StudentDTO cannot be null!");
 
         Student savedStudent = gateway.create(mapper.map(studentDTO));
         logger.info("M=createStudent, message=UseCase, student return successfully, student={}", savedStudent);

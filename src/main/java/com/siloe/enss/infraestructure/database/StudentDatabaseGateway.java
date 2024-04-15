@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -27,7 +26,7 @@ public class StudentDatabaseGateway implements StudentGateway {
     }
     @Override
     public Student create(Student student) {
-        Objects.requireNonNull(student, "student cannot be null");
+        Objects.requireNonNull(student, "Student cannot be null");
 
         StudentPresentation presentation = mapper.mapToPresentation(student);
         logger.info("M=createStudent, message=StudentDatabaseGateway, student return successfully, student={}", presentation);
