@@ -46,7 +46,6 @@ public class StudentPresentation {
         private Long responsibleId = null;
 
         public StudentPresentation.Builder id(Long value) {
-            Objects.requireNonNull(value, "id must not be null");
             id = value;
             return this;
         }

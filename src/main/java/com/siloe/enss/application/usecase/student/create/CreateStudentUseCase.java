@@ -26,13 +26,13 @@ public class CreateStudentUseCase {
         this.mapper = mapper;
     }
 
-    public StudentDTO execute(StudentDTO studentDTO) {
+    public Student execute(StudentDTO studentDTO) {
         Objects.requireNonNull(studentDTO, "StudentDTO cannot be null!");
 
-        Student savedStudent = gateway.create(mapper.map(studentDTO));
-        logger.info("M=createStudent, message=UseCase, student return successfully, student={}", savedStudent);
+        Student createdStudent = gateway.create(mapper.map(studentDTO));
+        logger.info("M=createStudent, message=UseCase, student return successfully, student={}", createdStudent);
 
-        return mapper.map(savedStudent);
+        return createdStudent;
     }
 
 }

@@ -31,9 +31,8 @@ public class StudentDatabaseGateway implements StudentGateway {
         StudentPresentation presentation = mapper.mapToPresentation(student);
         logger.info("M=createStudent, message=StudentDatabaseGateway, student return successfully, student={}", presentation);
 
-        repository.save(presentation);
-
-        return student;
+        StudentPresentation saveResponse = repository.save(presentation);
+        return mapper.presentationToMap(saveResponse);
     }
 
     @Override
@@ -76,7 +75,7 @@ public class StudentDatabaseGateway implements StudentGateway {
 
             StudentPresentation studentUpdated = repository.save(studentToUpdate);
             logger.info("M=updateStudent, message=StudentDatabaseGateway, student updated successfully, student={}", studentUpdated);
-            return student;
+            return mapper.presentationToMap(studentUpdated);
         }else{
             logger.info("M=updateStudent, message=StudentDatabaseGateway, unable update student");
             return null;

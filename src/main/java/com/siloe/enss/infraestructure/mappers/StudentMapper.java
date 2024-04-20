@@ -10,7 +10,6 @@ public class StudentMapper {
 
     public Student map(StudentDTO studentDTO){
         return new Student.Builder()
-                .id(studentDTO.id())
                 .name(studentDTO.name())
                 .registration(studentDTO.registration())
                 .cpf(studentDTO.cpf())
@@ -21,8 +20,21 @@ public class StudentMapper {
                 .build();
     }
 
+    public Student presentationToMap(StudentPresentation studentPresentation){
+        return new Student.Builder()
+                .id(studentPresentation.getId())
+                .name(studentPresentation.getName())
+                .registration(studentPresentation.getRegistration())
+                .cpf(studentPresentation.getCpf())
+                .birthCertificate(studentPresentation.getBirthCertificate())
+                .serie(studentPresentation.getSerie())
+                .birth(studentPresentation.getBirth())
+                .responsible(studentPresentation.getResponsible())
+                .build();
+    }
+
     public StudentDTO map(Student student){
-        return new StudentDTO(student.getId(), student.getName(), student.getRegistration(), student.getCpf(), student.getBirthCertificate(),
+        return new StudentDTO(student.getName(), student.getRegistration(), student.getCpf(), student.getBirthCertificate(),
                 student.getSerie(), student.getBirth(), student.getResponsibleId());
     }
 

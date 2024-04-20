@@ -37,7 +37,6 @@ public class StudentMapperTest {
         LocalDate birth = fakeDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         return new StudentDTO(
-                faker.number().randomNumber(),
                 faker.name().fullName(),
                 String.format("Livro %d, pagina %d", bookNumber, pageNumber),
                 cpf,
@@ -77,7 +76,6 @@ public class StudentMapperTest {
 
         // Then
         assertNotNull(student);
-        assertEquals(dto.id(), student.getId());
         assertEquals(dto.name(), student.getName());
         assertEquals(dto.registration(), student.getRegistration());
         assertEquals(dto.cpf(), student.getCpf());
@@ -97,7 +95,6 @@ public class StudentMapperTest {
 
         // Then
         assertNotNull(dto);
-        assertEquals(student.getId(), dto.id());
         assertEquals(student.getName(), dto.name());
         assertEquals(student.getRegistration(), dto.registration());
         assertEquals(student.getCpf(), dto.cpf());
@@ -125,5 +122,24 @@ public class StudentMapperTest {
         assertEquals(student.getSerie(), presentation.getSerie());
         assertEquals(student.getBirth(), presentation.getBirth());
         assertEquals(student.getResponsibleId(), presentation.getResponsible());
+    }
+
+    @Test
+    public void testPresentationToMap(){
+        Student student = createFakeStudent();
+        StudentPresentation studentPresentation = studentMapper.mapToPresentation(student);
+
+        Student mappedStudent = studentMapper.presentationToMap(studentPresentation);
+
+        assertNotNull(mappedStudent);
+        assertEquals(student.getId(), mappedStudent.getId());
+        assertEquals(student.getName(), mappedStudent.getName());
+        assertEquals(student.getRegistration(), mappedStudent.getRegistration());
+        assertEquals(student.getCpf(), mappedStudent.getCpf());
+        assertEquals(student.getBirthCertificate(), mappedStudent.getBirthCertificate());
+        assertEquals(student.getSerie(), mappedStudent.getSerie());
+        assertEquals(student.getBirth(), mappedStudent.getBirth());
+        assertEquals(student.getResponsibleId(), mappedStudent.getResponsibleId());
+
     }
 }

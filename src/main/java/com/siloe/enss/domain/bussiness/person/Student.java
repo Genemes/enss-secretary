@@ -36,7 +36,6 @@ public class Student {
         private Long responsibleId = null;
 
         public Builder id(Long value) {
-            Objects.requireNonNull(value, "Id must not be null");
             id = value;
             return this;
         }
