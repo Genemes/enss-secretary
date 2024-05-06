@@ -69,10 +69,12 @@ public class UpdateStudentDatabaseGatewayTest {
                 .thenReturn(Optional.of(originalStudentPresentation));
         Mockito.when(studentRepository.save(updatedStudentPresentation))
                 .thenReturn(updatedStudentPresentation);
+        Mockito.when(mapper.presentationToMap(updatedStudentPresentation))
+                .thenReturn(updatedStudent);
 
-        Student response = studentDatabaseGateway.update(updatedStudent, idToUpdate);
+        Student updateStudentResponse = studentDatabaseGateway.update(updatedStudent, idToUpdate);
 
-        Assertions.assertEquals(response, updatedStudent);
+        Assertions.assertEquals(updateStudentResponse, updatedStudent);
         Mockito.verify(studentRepository, Mockito.times(1))
                 .findById(idToUpdate);
         Mockito.verify(studentRepository, Mockito.times(1))

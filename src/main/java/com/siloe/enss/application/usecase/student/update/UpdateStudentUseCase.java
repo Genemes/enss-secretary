@@ -4,6 +4,7 @@ import com.siloe.enss.application.gateway.StudentGateway;
 import com.siloe.enss.domain.bussiness.person.Student;
 import com.siloe.enss.domain.dto.StudentDTO;
 import com.siloe.enss.infraestructure.mappers.StudentMapper;
+import com.siloe.enss.infraestructure.presentation.StudentPresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class UpdateStudentUseCase {
         this.studentMapper = studentMapper;
     }
 
-    public StudentDTO execute(StudentDTO studentDTO, Long id){
+    public Student execute(StudentDTO studentDTO, Long id){
         Objects.requireNonNull(studentDTO, "Student cannot be null");
         Objects.requireNonNull(id, "Id cannot be null");
 
@@ -31,7 +32,7 @@ public class UpdateStudentUseCase {
 
         if (Objects.nonNull(updateResponse)) {
             logger.info("M=updateStudent, message=UseCase, student updated successfully, student={}", updateResponse);
-            return studentMapper.map(updateResponse);
+            return updateResponse;
         }
         return null;
     }

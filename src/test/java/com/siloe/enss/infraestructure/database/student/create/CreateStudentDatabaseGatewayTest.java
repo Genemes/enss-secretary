@@ -55,6 +55,8 @@ public class CreateStudentDatabaseGatewayTest {
                 .thenReturn(studentPresentation);
         Mockito.when(studentMapperMock.mapToPresentation(student))
                 .thenReturn(studentPresentation);
+        Mockito.when(studentMapperMock.presentationToMap(studentPresentation))
+                .thenReturn(student);
 
         Student createResponse = studentDatabaseGateway.create(student);
 

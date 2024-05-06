@@ -3,8 +3,10 @@ package com.siloe.enss.entrypoint.rest;
 import com.siloe.enss.application.usecase.student.create.CreateStudentUseCase;
 import com.siloe.enss.application.usecase.student.delete.DeleteStudentUseCase;
 import com.siloe.enss.application.usecase.student.update.UpdateStudentUseCase;
+import com.siloe.enss.domain.bussiness.person.Student;
 import com.siloe.enss.domain.dto.StudentDTO;
 import com.siloe.enss.entrypoint.vo.StudentVO;
+import com.siloe.enss.infraestructure.presentation.StudentPresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -37,35 +39,36 @@ public class StudentController {
     public ResponseEntity<StudentVO> create(@RequestBody StudentDTO studentDTO) {
         logger.info("M=create, message=Controller, request to create a successfully received Student");
 
-        StudentDTO createdStudent = createSudentUsecase.execute(studentDTO);
-
-        URI uri = UriComponentsBuilder.fromUriString("/api/v1/student/{id}").build(createdStudent.id());
+        Student createdStudent = createSudentUsecase.execute(studentDTO);
 
         logger.info("M=create, message=Controller, student created successfully, createdStudent={}", createdStudent);
 
-        return ResponseEntity.created(uri).body(StudentVO.with(createdStudent.name(), createdStudent.registration(), createdStudent.cpf(),
-                createdStudent.birthCertificate(), createdStudent.serie(), createdStudent.birth(), createdStudent.responsibleId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(StudentVO.with(createdStudent.getId(), createdStudent.getName(), createdStudent.getRegistration(), createdStudent.getCpf(),
+                createdStudent.getBirthCertificate(), createdStudent.getSerie(), createdStudent.getBirth(), createdStudent.getResponsibleId()));
     }
 
-    @DeleteMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> delete(@PathVariable Long id){
         logger.info("M=delete, message=Controller, request to delete a Student");
 
-        deleteStudentUseCase.execute(id);
+        boolean deletionResponse = deleteStudentUseCase.execute(id);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        if (deletionResponse) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StudentVO> update(@RequestBody StudentDTO studentDTO, @PathVariable Long id){
         logger.info("M=update, message=Controller, request to update a Student");
 
-        StudentDTO updateResponse = updateStudentUseCase.execute(studentDTO, id);
+        Student updateResponse = updateStudentUseCase.execute(studentDTO, id);
 
         if (Objects.nonNull(updateResponse)){
             logger.info("M=update, message=Controller, student updated successfully, updatedStudent={}", updateResponse);
-            return ResponseEntity.status(HttpStatus.OK).body(StudentVO.with(updateResponse.name(), updateResponse.registration(), updateResponse.cpf(),
-                    updateResponse.birthCertificate(), updateResponse.serie(), updateResponse.birth(), updateResponse.responsibleId()));
+            return ResponseEntity.status(HttpStatus.OK).body(StudentVO.with(updateResponse.getId(), updateResponse.getName(), updateResponse.getRegistration(), updateResponse.getCpf(),
+                    updateResponse.getBirthCertificate(), updateResponse.getSerie(), updateResponse.getBirth(), updateResponse.getResponsibleId()));
         }
 
         logger.info("M=update, message=Controller, unable update student");
