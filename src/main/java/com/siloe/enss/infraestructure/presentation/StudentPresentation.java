@@ -1,9 +1,7 @@
 package com.siloe.enss.infraestructure.presentation;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.siloe.enss.domain.bussiness.person.BirthCertificate;
+import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDate;
@@ -18,12 +16,14 @@ public class StudentPresentation {
     private String name;
     private String registration;
     private String cpf;
-    private String birthCertificate;
+    @OneToOne(cascade = CascadeType.ALL)
+    private BirthCertificatePresentation birthCertificate;
     private String serie;
     private LocalDate birth;
     private Long responsibleId;
 
     public StudentPresentation(){}
+
     private StudentPresentation(Builder builder) {
         id = builder.id;
         name = builder.name;
@@ -40,7 +40,7 @@ public class StudentPresentation {
         private String name = "";
         private String registration = "";
         private String cpf = "";
-        private String birthCertificate = "";
+        private BirthCertificatePresentation birthCertificate = null;
         private String serie = "";
         private LocalDate birth = LocalDate.now();
         private Long responsibleId = null;
@@ -65,7 +65,7 @@ public class StudentPresentation {
             return this;
         }
 
-        public StudentPresentation.Builder birthCertificate(String value) {
+        public StudentPresentation.Builder birthCertificate(BirthCertificatePresentation value) {
             Objects.requireNonNull(value, "Birth certificate must not be null");
             birthCertificate = value;
             return this;
@@ -133,12 +133,20 @@ public class StudentPresentation {
     }
 
     @NonNull
-    public String getBirthCertificate() {
+    public BirthCertificatePresentation getBirthCertificate() {
         return birthCertificate;
     }
 
-    public void setBirthCertificate(@NonNull String birthCertificate) {
+    public void setBirthCertificate(@NonNull BirthCertificatePresentation birthCertificate) {
         this.birthCertificate = birthCertificate;
+    }
+
+    public Long getResponsibleId() {
+        return responsibleId;
+    }
+
+    public void setResponsibleId(Long responsibleId) {
+        this.responsibleId = responsibleId;
     }
 
     @NonNull

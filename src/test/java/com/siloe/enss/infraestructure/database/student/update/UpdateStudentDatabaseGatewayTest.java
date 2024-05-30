@@ -1,5 +1,6 @@
 package com.siloe.enss.infraestructure.database.student.update;
 
+import com.siloe.enss.domain.bussiness.person.BirthCertificate;
 import com.siloe.enss.domain.bussiness.person.Student;
 import com.siloe.enss.infraestructure.database.StudentDatabaseGateway;
 import com.siloe.enss.infraestructure.mappers.StudentMapper;
@@ -8,14 +9,16 @@ import com.siloe.enss.infraestructure.repository.StudentRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
+@ExtendWith(MockitoExtension.class)
 public class UpdateStudentDatabaseGatewayTest {
 
 
@@ -30,6 +33,8 @@ public class UpdateStudentDatabaseGatewayTest {
 
     private StudentMapper studentMapper;
 
+    private BirthCertificate birthCertificate;
+
     private Student originalStudent;
 
     private Student updatedStudent;
@@ -40,25 +45,34 @@ public class UpdateStudentDatabaseGatewayTest {
 
     @BeforeEach
     public void setUp(){
-        this.originalStudent = new Student.Builder()
+        studentMapper = new StudentMapper();
+
+        birthCertificate = new BirthCertificate.Builder()
+                .id(1L)
+                .certificateNumber(12345678910L)
+                .motherName("João Duarte Américo")
+                .fatherName("Maria Silva Américo")
+                .bookNumber(16)
+                .bookPage(52)
+                .placeOfBirth("Cajazeiras")
+                .build();
+
+        originalStudent = new Student.Builder()
                 .id(58L)
                 .name("Gabriel dos Santos")
                 .registration("2024002")
                 .cpf("799.521.742-48")
-                .birthCertificate("14976301352019666150797490123555")
+                .birthCertificate(birthCertificate)
                 .serie("7")
                 .birth(LocalDate.parse("2011-08-25"))
                 .responsible(2L)
                 .build();
-        this.studentMapper = new StudentMapper();
 
-        this.updatedStudent = originalStudent;
-        this.updatedStudent.setName(this.updatedStudent.getName() + " Silveira");
+        updatedStudent = originalStudent;
+        updatedStudent.setName(updatedStudent.getName() + " Silveira");
 
-        this.originalStudentPresentation = this.studentMapper.mapToPresentation(originalStudent);
-        this.updatedStudentPresentation = this.studentMapper.mapToPresentation(updatedStudent);
-
-        MockitoAnnotations.openMocks(this);
+        originalStudentPresentation = studentMapper.mapToPresentation(originalStudent);
+        updatedStudentPresentation = studentMapper.mapToPresentation(updatedStudent);
     }
 
     @Test
@@ -83,9 +97,6 @@ public class UpdateStudentDatabaseGatewayTest {
 
     @Test
     public void whenGivenAValidStudentAndNullIdThenThrow(){
-        Mockito.when(studentRepository.findById(null))
-                .thenReturn(Optional.empty());
-
         NullPointerException exception = Assertions.assertThrows(NullPointerException.class, () -> {
             studentDatabaseGateway.update(originalStudent, null);
         });

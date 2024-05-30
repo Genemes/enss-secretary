@@ -2,7 +2,9 @@ package com.siloe.enss.infraestructure.database;
 
 import com.siloe.enss.application.gateway.StudentGateway;
 import com.siloe.enss.domain.bussiness.person.Student;
+import com.siloe.enss.infraestructure.mappers.BirthCertificateMapper;
 import com.siloe.enss.infraestructure.mappers.StudentMapper;
+import com.siloe.enss.infraestructure.presentation.BirthCertificatePresentation;
 import com.siloe.enss.infraestructure.presentation.StudentPresentation;
 import com.siloe.enss.infraestructure.repository.StudentRepository;
 
@@ -27,9 +29,10 @@ public class StudentDatabaseGateway implements StudentGateway {
     @Override
     public Student create(Student student) {
         Objects.requireNonNull(student, "Student cannot be null");
-
+        
         StudentPresentation presentation = mapper.mapToPresentation(student);
-        logger.info("M=createStudent, message=StudentDatabaseGateway, student return successfully, student={}", presentation);
+        logger.info("M=createStudent, message=StudentDatabaseGateway, student return successfully, student={}",
+                presentation);
 
         StudentPresentation saveResponse = repository.save(presentation);
         return mapper.presentationToMap(saveResponse);
@@ -66,8 +69,8 @@ public class StudentDatabaseGateway implements StudentGateway {
                     .id(retreivedStudent.getId())
                     .name(student.getName())
                     .registration(student.getRegistration())
-                    .cpf(student.getCpf())
-                    .birthCertificate(student.getBirthCertificate())
+                    .cpf(retreivedStudent.getCpf())
+                    .birthCertificate(retreivedStudent.getBirthCertificate())
                     .serie(student.getSerie())
                     .birth(student.getBirth())
                     .responsibleId(student.getResponsibleId())
