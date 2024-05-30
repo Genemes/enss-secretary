@@ -1,11 +1,16 @@
 package com.siloe.enss.infraestructure.mappers;
 
 import com.github.javafaker.Faker;
+import com.siloe.enss.domain.bussiness.person.BirthCertificate;
 import com.siloe.enss.domain.bussiness.person.Student;
+import com.siloe.enss.domain.dto.BirthCertificateDTO;
 import com.siloe.enss.domain.dto.StudentDTO;
 import com.siloe.enss.infraestructure.presentation.StudentPresentation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
@@ -19,13 +24,33 @@ public class StudentMapperTest {
     private static final String CPF_PATTERN = "[0-9]{3}\\.[0-9]{3}\\.[0-9]{3}-[0-9]{2}";
     private static final String RG_PATTERN = "[0-9]{2}\\.[0-9]{3}\\.[0-9]{3}-[0-9]{1}";
 
+    @Mock
+    private BirthCertificateMapper birthCertificateMapperMock;
+
+    private BirthCertificateMapper birthCertificateMapper;
+
+    @InjectMocks
     private StudentMapper studentMapper;
+
     private Faker faker;
+
+    private BirthCertificate birthCertificate;
 
     @BeforeEach
     public void setUp() {
         studentMapper = new StudentMapper();
+        birthCertificateMapperMock = new BirthCertificateMapper();
+        birthCertificateMapper = new BirthCertificateMapper();
         faker = new Faker(LOCALE_PT_BR);
+
+        birthCertificate = new BirthCertificate.Builder()
+                .certificateNumber(12345678910L)
+                .motherName("João Duarte Américo")
+                .fatherName("Maria Silva Américo")
+                .bookNumber(16)
+                .bookPage(52)
+                .placeOfBirth("Cajazeiras")
+                .build();
     }
 
     private StudentDTO createFakeStudentDTO() {
@@ -40,7 +65,7 @@ public class StudentMapperTest {
                 faker.name().fullName(),
                 String.format("Livro %d, pagina %d", bookNumber, pageNumber),
                 cpf,
-                faker.number().toString(),
+                birthCertificateMapperMock.mapToDto(birthCertificate),
                 faker.number().toString(),
                 birth,
                 faker.number().randomNumber());
@@ -59,7 +84,7 @@ public class StudentMapperTest {
                 .name(faker.name().fullName())
                 .registration(String.format("Livro %d, pagina %d", bookNumber, pageNumber))
                 .cpf(cpf)
-                .birthCertificate(faker.number().toString())
+                .birthCertificate(birthCertificate)
                 .serie(faker.number().toString())
                 .birth(birth)
                 .responsible(faker.number().randomNumber())
@@ -79,7 +104,7 @@ public class StudentMapperTest {
         assertEquals(dto.name(), student.getName());
         assertEquals(dto.registration(), student.getRegistration());
         assertEquals(dto.cpf(), student.getCpf());
-        assertEquals(dto.birthCertificate(), student.getBirthCertificate());
+        assertEquals(birthCertificateMapper.dtoToMap(dto.birthCertificate()), student.getBirthCertificate());
         assertEquals(dto.serie(), student.getSerie());
         assertEquals(dto.birth(), student.getBirth());
         assertEquals(dto.responsibleId(), student.getResponsibleId());
@@ -88,7 +113,7 @@ public class StudentMapperTest {
     @Test
     public void testMapFromEntityToDTO() {
         // Given
-        Student student = new Student.Builder().build();
+        Student student = createFakeStudent();
 
         // When
         StudentDTO dto = studentMapper.map(student);
@@ -98,7 +123,7 @@ public class StudentMapperTest {
         assertEquals(student.getName(), dto.name());
         assertEquals(student.getRegistration(), dto.registration());
         assertEquals(student.getCpf(), dto.cpf());
-        assertEquals(student.getBirthCertificate(), dto.birthCertificate());
+        assertEquals(student.getBirthCertificate(), birthCertificateMapper.dtoToMap(dto.birthCertificate()));
         assertEquals(student.getSerie(), dto.serie());
         assertEquals(student.getBirth(), dto.birth());
         assertEquals(student.getResponsibleId(), dto.responsibleId());
@@ -118,7 +143,8 @@ public class StudentMapperTest {
         assertEquals(student.getName(), presentation.getName());
         assertEquals(student.getRegistration(), presentation.getRegistration());
         assertEquals(student.getCpf(), presentation.getCpf());
-        assertEquals(student.getBirthCertificate(), presentation.getBirthCertificate());
+        assertEquals(student.getBirthCertificate(), new BirthCertificateMapper()
+                .presentationToMap(presentation.getBirthCertificate()));
         assertEquals(student.getSerie(), presentation.getSerie());
         assertEquals(student.getBirth(), presentation.getBirth());
         assertEquals(student.getResponsibleId(), presentation.getResponsible());

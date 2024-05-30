@@ -1,5 +1,9 @@
 package com.siloe.enss.domain.bussiness.person;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -9,7 +13,7 @@ public class Student {
     private String name;
     private String registration;
     private String cpf;
-    private String birthCertificate;
+    private BirthCertificate birthCertificate;
     private String serie;
     private LocalDate birth;
     private Long responsibleId;
@@ -30,7 +34,7 @@ public class Student {
         private String name = "";
         private String registration = "";
         private String cpf = "";
-        private String birthCertificate = "";
+        private BirthCertificate birthCertificate = null;
         private String serie = "";
         private LocalDate birth = LocalDate.now();
         private Long responsibleId = null;
@@ -55,9 +59,9 @@ public class Student {
             return this;
         }
 
-        public Builder birthCertificate(String value) {
-            Objects.requireNonNull(value, "Birth certificate must not be null");
-            birthCertificate = value;
+        public Builder birthCertificate(BirthCertificate birthCertificate) {
+            Objects.requireNonNull(birthCertificate, "Birth certificate must not be null");
+            this.birthCertificate = birthCertificate;
             return this;
         }
 
@@ -121,11 +125,11 @@ public class Student {
         this.cpf = cpf;
     }
 
-    public String getBirthCertificate() {
+    public BirthCertificate getBirthCertificate() {
         return birthCertificate;
     }
 
-    public void setBirthCertificate(String birthCertificate) {
+    public void setBirthCertificate(BirthCertificate birthCertificate) {
         this.birthCertificate = birthCertificate;
     }
 

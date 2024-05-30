@@ -1,27 +1,39 @@
 package com.siloe.enss.infraestructure.database.student.create;
 
+import com.siloe.enss.domain.bussiness.person.BirthCertificate;
 import com.siloe.enss.domain.bussiness.person.Student;
 import com.siloe.enss.infraestructure.database.StudentDatabaseGateway;
+import com.siloe.enss.infraestructure.mappers.BirthCertificateMapper;
 import com.siloe.enss.infraestructure.mappers.StudentMapper;
+import com.siloe.enss.infraestructure.presentation.BirthCertificatePresentation;
 import com.siloe.enss.infraestructure.presentation.StudentPresentation;
 import com.siloe.enss.infraestructure.repository.StudentRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 
+@ExtendWith(MockitoExtension.class)
 public class CreateStudentDatabaseGatewayTest {
 
     private Student student;
 
+    private BirthCertificate birthCertificate;
+
     private StudentMapper studentMapperTest;
 
+    private BirthCertificateMapper birthCertificateMapperTest;
+
     private StudentPresentation studentPresentation;
+
+    private BirthCertificatePresentation birthCertificatePresentation;
     @Mock
     private StudentMapper studentMapperMock;
 
@@ -33,20 +45,32 @@ public class CreateStudentDatabaseGatewayTest {
 
     @BeforeEach
     public void setUp(){
+        studentMapperTest = new StudentMapper();
+        birthCertificateMapperTest = new BirthCertificateMapper();
 
-        this.student = new Student.Builder()
+        birthCertificate = new BirthCertificate.Builder()
+                .id(1L)
+                .certificateNumber(12345678910L)
+                .motherName("João Duarte Américo")
+                .fatherName("Maria Silva Américo")
+                .bookNumber(16)
+                .bookPage(52)
+                .placeOfBirth("Cajazeiras")
+                .build();
+        birthCertificatePresentation = birthCertificateMapperTest.mapToPresentation(birthCertificate);
+
+        student = new Student.Builder()
                 .id(6L)
                 .name("Marina Silva Duarte")
                 .registration("2022017")
                 .cpf("718.544.364-71")
-                .birthCertificate("19244303551019161155997790743220")
+                .birthCertificate(birthCertificate)
                 .serie("7")
                 .birth(LocalDate.parse("2012-10-29"))
                 .responsible(3L)
                 .build();
-        this.studentMapperTest = new StudentMapper();
-        this.studentPresentation = studentMapperTest.mapToPresentation(student);
-        MockitoAnnotations.openMocks(this);
+        studentPresentation = studentMapperTest.mapToPresentation(student);
+
     }
 
     @Test
@@ -60,7 +84,7 @@ public class CreateStudentDatabaseGatewayTest {
 
         Student createResponse = studentDatabaseGateway.create(student);
 
-        Assertions.assertEquals(createResponse, student);
+        Assertions.assertEquals(student, createResponse);
         Mockito.verify(studentRepository,
                 Mockito.times(1)).save(studentPresentation);
         Mockito.verifyNoMoreInteractions(studentRepository);
