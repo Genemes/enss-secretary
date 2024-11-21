@@ -1,0 +1,7 @@
+FROM eclipse-temurin:21.0.1_12-jre-alpine
+
+RUN mkdir /app
+
+COPY target/enss-0.0.1-SNAPSHOT.jar /app/enss-0.0.1-SNAPSHOT.jar
+
+CMD ["java", "-jar", "/app/enss-0.0.1-SNAPSHOT.jar"]

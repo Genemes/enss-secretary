@@ -45,12 +45,15 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address{" +
-                "street='" + street + '\'' +
-                ", number=" + number +
-                ", neighborhood='" + neighborhood + '\'' +
-                ", city='" + city + '\'' +
-                ", state=" + state +
-                '}';
+        return """
+            Address{
+                street='%s',
+                number=%d,
+                neighborhood=%s,
+                city=%s,
+                state=%s
+            }
+            """.formatted(street, number, neighborhood, city, state);
     }
+
 }

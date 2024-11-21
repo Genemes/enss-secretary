@@ -176,14 +176,16 @@ public class Student {
 
     @Override
     public String toString() {
-        return "Student{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", registration='" + registration + '\'' +
-                ", cpf='" + cpf + '\'' +
-                ", birthCertificate='" + birthCertificate + '\'' +
-                ", serie='" + serie + '\'' +
-                ", birth=" + birth +
-                '}';
+        return """
+            Student{
+                id=%d,
+                name='%s',
+                registration=%s,
+                cpf=%s,
+                birthCertificate=%s,
+                serie=%s,
+                birth=%s,
+            }
+            """.formatted(id, name, registration, cpf, birthCertificate, serie, birth);
     }
 }

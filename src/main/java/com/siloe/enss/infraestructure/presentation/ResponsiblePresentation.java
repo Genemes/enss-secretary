@@ -1,6 +1,5 @@
 package com.siloe.enss.infraestructure.presentation;
 
-import com.siloe.enss.domain.bussiness.person.Email;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -22,6 +21,18 @@ public class ResponsiblePresentation {
     @OneToOne
     private AddressPresentation address;
 
+    @ManyToMany
+    @JoinTable(name = "responsible_student", joinColumns = @JoinColumn(name = "responsible_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id"))
+    private Set<StudentPresentation> students = new HashSet<>();
+
+    public boolean addStudent(StudentPresentation student) {
+        return getStudents().add(student);
+    }
+    public boolean removeStudent(StudentPresentation student) {
+        return getStudents().remove(student);
+    }
+
     public ResponsiblePresentation(){}
     private ResponsiblePresentation(Builder builder) {
         name = builder.name;
@@ -31,6 +42,7 @@ public class ResponsiblePresentation {
         phone = builder.phone;
         email = builder.email;
         address = builder.address;
+        students = builder.students;
     }
     public static class Builder {
         private String name = "";
@@ -40,7 +52,7 @@ public class ResponsiblePresentation {
         private String phone = "";
         private EmailPresentation email = EmailPresentation.of("");
         private AddressPresentation address = null;
-        private Set<StudentPresentation> children = null;
+        private Set<StudentPresentation> students = null;
 
         public Builder name (String value) {
             Objects.requireNonNull(value, "Name must not be null");
@@ -83,6 +95,12 @@ public class ResponsiblePresentation {
         public Builder address (AddressPresentation value) {
             Objects.requireNonNull(value, "Address must not be null");
             address = value;
+            return this;
+        }
+
+        public Builder students (Set<StudentPresentation> value) {
+            Objects.requireNonNull(value, "Students must not be null");
+            students = value;
             return this;
         }
 
@@ -155,6 +173,14 @@ public class ResponsiblePresentation {
         this.address = address;
     }
 
+    public Set<StudentPresentation> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<StudentPresentation> students) {
+        this.students = students;
+    }
+
     @Override
     public boolean equals(Object o) {
         if(o instanceof ResponsiblePresentation other){
@@ -165,26 +191,39 @@ public class ResponsiblePresentation {
                     && Objects.equals(this.birth, other.birth)
                     && Objects.equals(this.phone, other.phone)
                     && Objects.equals(this.email, other.email)
-                    && Objects.equals(this.address, other.address);
+                    && Objects.equals(this.address, other.address)
+                    && Objects.equals(this.students, other.students);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, cpf, rg, birth, phone, email, address);
+        return Objects.hash(id, name, cpf, rg, birth, phone, email, address, students);
     }
 
     @Override
     public String toString() {
-        return "Responsible{" +
-                ", name='" + name + '\'' +
-                ", cpf='" + cpf + '\'' +
-                ", rg='" + rg + '\'' +
-                ", birth=" + birth +
-                ", phone='" + phone + '\'' +
-                ", email=" + email +
-                ", address=" + address +
-                '}';
+        StringBuilder studentsNames = new StringBuilder();
+        for (StudentPresentation student : students) {
+            studentsNames.append("\"").append(student.getName()).append(" - ");
+        }
+
+        String formattedStudents = studentsNames.length() > 0 ?
+                studentsNames.substring(0, studentsNames.length() - 2) : "[]";
+
+        return """
+            Group{
+                id=%d,
+                name='%s',
+                cpf='%s',
+                rg=%s,
+                birth='%s',
+                phone=%s,
+                email='%s',
+                address=%s,
+                students=%s
+            }
+            """.formatted(id, name, formattedStudents);
     }
 }

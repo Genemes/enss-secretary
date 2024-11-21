@@ -4,12 +4,14 @@ import com.siloe.enss.domain.bussiness.person.Email;
 import com.siloe.enss.infraestructure.mappers.EmailMapper;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Objects;
 
 @Embeddable
 public class EmailPresentation {
 
+    @NotBlank
     private String value;
 
     public EmailPresentation(){}

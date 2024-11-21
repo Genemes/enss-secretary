@@ -168,15 +168,17 @@ public class Responsible {
 
     @Override
     public String toString() {
-        return "Responsible{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", cpf='" + cpf + '\'' +
-                ", rg='" + rg + '\'' +
-                ", birth=" + birth +
-                ", phone='" + phone + '\'' +
-                ", email=" + email +
-                ", address=" + address +
-                '}';
+        return """
+            Responsible{
+                id=%d,
+                name='%s',
+                cpf=%s,
+                rg=%s,
+                birth=%s,
+                phone=%s,
+                email=%s,
+                address=%s,
+            }
+            """.formatted(id, name, cpf,rg, birth, phone, email, address);
     }
 }
